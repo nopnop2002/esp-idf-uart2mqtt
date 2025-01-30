@@ -121,7 +121,7 @@ A MQTT-Client app is required.
 There are many applications available on the Internet.   
 I used [this](https://mqtt-explorer.com/) application.   
 This application works not only on Windows, but also on Linux and Mac.   
-Many other applications are available on the Internet.
+Many other applications are available on the Internet.   
 
 ## Subsclibe from ESP32
 ![Image](https://github.com/user-attachments/assets/8d10dc20-4269-4674-893f-d9801c961b05)
