@@ -1,4 +1,4 @@
-# esp-idf-uart2udp
+# esp-idf-uart2mqtt
 UART to MQTT bridge for ESP-IDF.   
 
 ![Image](https://github.com/user-attachments/assets/200f57e3-0f80-404c-a970-8004dac74c69)
@@ -11,8 +11,8 @@ ESP-IDF V4.4 release branch reached EOL in July 2024.
 # Installation
 
 ```
-git clone https://github.com/nopnop2002/esp-idf-uart2udp
-cd esp-idf-uart2udp/
+git clone https://github.com/nopnop2002/esp-idf-uart2mqtt
+cd esp-idf-uart2mqtt/
 idf.py menuconfig
 idf.py flash
 ```
