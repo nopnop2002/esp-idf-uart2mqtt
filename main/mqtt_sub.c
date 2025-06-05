@@ -35,7 +35,7 @@ static const char *TAG = "SUB";
 extern const uint8_t root_cert_pem_start[] asm("_binary_root_cert_pem_start");
 extern const uint8_t root_cert_pem_end[] asm("_binary_root_cert_pem_end");
 
-extern MessageBufferHandle_t xMessageBufferUart;
+extern MessageBufferHandle_t xMessageBufferTx;
 extern size_t xItemSize;
 
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
@@ -182,7 +182,9 @@ void mqtt_sub(void *pvParameters)
 		} else if (mqttBuf.event_id == MQTT_EVENT_DATA) {
 			ESP_LOGI(TAG, "TOPIC=[%.*s]\r", mqttBuf.topic_len, mqttBuf.topic);
 			//ESP_LOGI(TAG, "DATA=[%.*s]\r", mqttBuf.data_len, mqttBuf.data);
-			xMessageBufferSend(xMessageBufferUart, mqttBuf.data, mqttBuf.data_len, portMAX_DELAY);
+			mqttBuf.data[mqttBuf.data_len] = 0x0a;
+			mqttBuf.data_len++;
+			xMessageBufferSend(xMessageBufferTx, mqttBuf.data, mqttBuf.data_len, portMAX_DELAY);
 		} else if (mqttBuf.event_id == MQTT_EVENT_ERROR) {
 			break;
 		}

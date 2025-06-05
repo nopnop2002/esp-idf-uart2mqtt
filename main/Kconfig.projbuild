@@ -3,11 +3,11 @@ menu "Application Configuration"
 	config GPIO_RANGE_MAX
 		int
 		default 33 if IDF_TARGET_ESP32
+		default 46 if IDF_TARGET_ESP32S2
 		default 48 if IDF_TARGET_ESP32S3
 		default 18 if IDF_TARGET_ESP32C2
 		default 19 if IDF_TARGET_ESP32C3
 		default 30 if IDF_TARGET_ESP32C6
-		default 27 if IDF_TARGET_ESP32H2
 
 	menu "WiFi Setting"
 
@@ -43,7 +43,7 @@ menu "Application Configuration"
 			int "UART TX GPIO number"
 			range 0 GPIO_RANGE_MAX
 			default 17 if IDF_TARGET_ESP32
-			default  2 if IDF_TARGET_ESP32S3
+			default  2 if IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32S3
 			default  1 # C3 and others
 			help
 				GPIO number (IOxx) to UART TX.
@@ -52,7 +52,7 @@ menu "Application Configuration"
 			int "UART RX GPIO number"
 			range 0 GPIO_RANGE_MAX
 			default 16 if IDF_TARGET_ESP32
-			default  1 if IDF_TARGET_ESP32S3
+			default  1 if IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32S3
 			default  0 # C3 and others
 			help
 				GPIO number (IOxx) to UART RX.

@@ -22,8 +22,8 @@
 #include "driver/uart.h"
 #include "mdns.h"
 
-MessageBufferHandle_t xMessageBufferMqtt;
-MessageBufferHandle_t xMessageBufferUart;
+MessageBufferHandle_t xMessageBufferRx;
+MessageBufferHandle_t xMessageBufferTx;
 
 // The total number of bytes (not messages) the message buffer will be able to hold at any one time.
 size_t xBufferSizeBytes = 1024;
@@ -172,10 +172,10 @@ esp_err_t query_mdns_host(const char * host_name, char *ip)
 	esp_err_t err = mdns_query_a(host_name, 10000,	&addr);
 	if(err){
 		if(err == ESP_ERR_NOT_FOUND){
-			ESP_LOGW(__FUNCTION__, "%s: Host was not found!", esp_err_to_name(err));
-			return ESP_FAIL;
+			ESP_LOGW(__FUNCTION__, "%s: Host was not found!", host_name);
+		} else {
+			ESP_LOGE(__FUNCTION__, "Query Failed: %s", esp_err_to_name(err));
 		}
-		ESP_LOGE(__FUNCTION__, "Query Failed: %s", esp_err_to_name(err));
 		return ESP_FAIL;
 	}
 
@@ -233,10 +233,10 @@ void app_main(void)
 	ESP_ERROR_CHECK( mdns_init() );
 
 	// Create MessageBuffer
-	xMessageBufferMqtt = xMessageBufferCreate(xBufferSizeBytes);
-	configASSERT( xMessageBufferMqtt );
-	xMessageBufferUart = xMessageBufferCreate(xBufferSizeBytes);
-	configASSERT( xMessageBufferUart );
+	xMessageBufferRx = xMessageBufferCreate(xBufferSizeBytes);
+	configASSERT( xMessageBufferRx );
+	xMessageBufferTx = xMessageBufferCreate(xBufferSizeBytes);
+	configASSERT( xMessageBufferTx );
 
 	// Start MQTT Subscribe
 	xTaskCreate(mqtt_sub, "SUB", 1024*4, NULL, 2, NULL);

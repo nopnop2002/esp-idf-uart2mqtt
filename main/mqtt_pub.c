@@ -27,7 +27,7 @@ extern const uint8_t root_cert_pem_end[] asm("_binary_root_cert_pem_end");
 EventGroupHandle_t mqtt_status_event_group;
 #define MQTT_CONNECTED_BIT BIT2
 
-extern MessageBufferHandle_t xMessageBufferMqtt;
+extern MessageBufferHandle_t xMessageBufferRx;
 extern size_t xItemSize;
 
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
@@ -143,14 +143,22 @@ void mqtt_pub(void *pvParameters)
 
 	char buffer[xItemSize];
 	while (1) {
-		size_t received = xMessageBufferReceive(xMessageBufferMqtt, buffer, sizeof(buffer), portMAX_DELAY);
+		size_t received = xMessageBufferReceive(xMessageBufferRx, buffer, sizeof(buffer), portMAX_DELAY);
 		ESP_LOGI(TAG, "xMessageBufferReceive received=%d", received);
 		if (received > 0) {
-			ESP_LOGI(TAG, "xMessageBufferReceive buffer=[%.*s]",received, buffer);
+			ESP_LOGD(TAG, "xMessageBufferReceive buffer=[%.*s]",received, buffer);
 			EventBits_t EventBits = xEventGroupGetBits(mqtt_status_event_group);
 			ESP_LOGI(TAG, "EventBits=0x%"PRIx32, EventBits);
 			if (EventBits & MQTT_CONNECTED_BIT) {
-				int msg_id = esp_mqtt_client_publish(mqtt_client, CONFIG_MQTT_PUB_TOPIC, buffer, received, 1, 0);
+				// Remove CR/LF
+				int _received = 0;
+				for (int i=0;i<received;i++) {
+					if (buffer[i] == 0x0d) break;
+					if (buffer[i] == 0x0a) break;
+					_received++;
+				}
+				ESP_LOGI(TAG, "esp_mqtt_client_publish buffer=[%.*s]",_received, buffer);
+				int msg_id = esp_mqtt_client_publish(mqtt_client, CONFIG_MQTT_PUB_TOPIC, buffer, _received, 1, 0);
 				ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
 			} else {
 				ESP_LOGE(TAG, "Disconnected from MQTT Broker");
