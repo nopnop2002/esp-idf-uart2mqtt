@@ -125,7 +125,7 @@ I (1285459) UART-RX: 0x3ffc8458   61 62 63 64 65 66 67 0d  0a                   
 
 ## Connect ESP32 and AtMega328 using wire cable   
 
-|AtMega328||ESP32|ESP32S3|ESP32C2/C3/C6|
+|AtMega328||ESP32|ESP32S2/S3|ESP32C2/C3/C6|
 |:-:|:-:|:-:|:-:|:-:|
 |TX|--|GPIO16|GPIO2|GPIO1|
 |RX|--|GPIO17|GPIO1|GPIO0|
